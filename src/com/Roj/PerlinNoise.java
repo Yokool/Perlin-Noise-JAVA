@@ -20,7 +20,7 @@ public class PerlinNoise
 		generatePermutationsFromSeed();
 	}
 	
-	public void noise(double x, double y)
+	public double noise(double x, double y)
 	{
 		System.out.println("**********************");
 		System.out.println("Noise Function Started");
@@ -59,6 +59,7 @@ public class PerlinNoise
 		int hBB = permutations[permutations[(permutations[xSquare + 1]+ySquare + 1)%permutations.length]];;
 		
 		
+		// TODO: SOMEWHAT TESTED
 		
 		Vector2 gradientVectorAA = getCornerVectorFromHash(hAA);
 		Vector2 gradientVectorBA = getCornerVectorFromHash(hBA);
@@ -70,6 +71,12 @@ public class PerlinNoise
 		System.out.println("AB: " + gradientVectorAB + "\nBB: " + gradientVectorBB);
 		System.out.println("AA: " + gradientVectorAA + "\nBA: " + gradientVectorBA);
 		System.out.println("**********************");
+		
+		gradientVectorAA.normalize();
+		gradientVectorBA.normalize();
+		gradientVectorAB.normalize();
+		gradientVectorBB.normalize();
+		
 		
 		double dotProductAA = dotProduct(gradientVectorAA, deltaAA);
 		double dotProductBA = dotProduct(gradientVectorBA, deltaBA);
@@ -84,11 +91,54 @@ public class PerlinNoise
 		System.out.println("**********************");
 		
 		
+		
+		// TODO: UNTESTED
+		/*
+		double lerpTopAxis = ((xSquare + 1 - x)/(xSquare + 1 - xSquare)) * dotProductAA;
+		lerpTopAxis += ((x - xSquare)/(xSquare + 1 - xSquare)) * dotProductBA;
+		
+		double lerpBottomAxis = ((xSquare + 1 - x)/(xSquare + 1 - xSquare)) * dotProductAB;
+		lerpBottomAxis += ((x - xSquare)/(xSquare + 1 - xSquare)) * dotProductBB;
+		
+		double finalValue = ((ySquare + 1 - y)/(ySquare + 1 - ySquare))*lerpBottomAxis;
+		finalValue += ((y - ySquare)/(ySquare + 1 - ySquare))*lerpTopAxis;
+		*/
+		
+		double xValBottom = lerp(dotProductAA, dotProductBA, fade(x - xSquare));
+		double xValTop = lerp(dotProductAB, dotProductBB, fade(x - xSquare));
+		double finalValue = lerp(xValBottom, xValTop, fade(y - ySquare));
+		
+		return finalValue;
+		
 	}
 	
+	private double fade(double t)
+	{
+		return t * t * t * (t * (t * 6 - 15) + 10);
+	}
+	
+	private double lerp(double x, double y, double v)
+	{
+		return x + ((y - x) * v);
+	}
+	
+	/*
+	private double lerp(Vector2 pointOne, Vector2 pointTwo, double x)
+	{
+		
+		double x0 = pointOne.getX();
+		double x1 = pointTwo.getX();
+		
+		double y0 = pointOne.getY();
+		double y1 = pointTwo.getY();
+		
+		return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
+		
+	}
+	*/
 	private double dotProduct(Vector2 v, Vector2 v1)
 	{
-		return v.getX() * v1.getX() + v.getY() * v1.getY();
+		return (v.getX() * v1.getX()) + (v.getY() * v1.getY());
 	}
 	
 	

@@ -27,6 +27,24 @@ public class Vector2 {
 		this.x = x;
 	}
 	
+	public void normalize()
+	{
+		
+		System.out.println("X: " + x + " Y: " + y);
+		
+		double magnitude = magnitude();
+		x = x / magnitude;
+		y = y / magnitude;
+		
+		System.out.println("X: " + x + " Y: " + y);
+	}
+	
+	public double magnitude()
+	{
+		return Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "X: " + x + " Y: " + y;
