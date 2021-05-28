@@ -29,14 +29,9 @@ public class Vector2 {
 	
 	public void normalize()
 	{
-		
-		System.out.println("X: " + x + " Y: " + y);
-		
 		double magnitude = magnitude();
 		x = x / magnitude;
 		y = y / magnitude;
-		
-		System.out.println("X: " + x + " Y: " + y);
 	}
 	
 	public double magnitude()
